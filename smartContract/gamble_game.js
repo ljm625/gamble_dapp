@@ -42,12 +42,46 @@ GambleGame.prototype = {
 
     accept: function () {
         // deposit money into the game.
+
+        // TODO: Disable multiple deposit.
+
         var par_list = this.repo.get("participant_list");
         var current_num = new BigNumber(this.repo.get("cur_number"));
-        var target = new BigNumber(this.repot.get("target"));
-        par_list[Blockchain.transaction.from]={start:current_num.plus(1).toString(), end: current_num.plus(Blockchain.transaction.value).plus(1).toString()};
-        current_num = current_num.plus(1).plus(Blockchain.transaction.value);
-        this.repo.put("cur_number", current_num.toString());
+        var target = new BigNumber(this.repo.get("target"));
+        if (current_num.plus(Blockchain.transaction.value).plus(1) > target){
+            // The Game is ended. Now start lucky chooser
+            par_list[Blockchain.transaction.from]={start:current_num.plus(1).toString(), end: target.toString()};
+            // refund the extra part first.
+            var extra = target.minus(current_num);
+            var refund = Blockchain.transaction.value.minus(extra);
+            current_num = target;
+            Blockchain.transfer(Blockchain.transaction.from,refund);
+
+            var winner = Math.floor(Math.random() * (target+1));
+            var winner_address=undefined;
+            // Find the winner now
+            for (var key in par_list) {
+                if(par_list.hasOwnProperty(key)){
+                    if(par_list.end <= winner && par_list.start >= winner){
+                        // This is the winner
+                        winner_address = key;
+                        break;
+                    }
+                }
+            }
+            if(winner_address!== undefined){
+                Blockchain.transfer()
+            }
+            
+
+
+        }
+        else{
+            par_list[Blockchain.transaction.from]={start:current_num.plus(1).toString(), end: current_num.plus(Blockchain.transaction.value).plus(1).toString()};
+            current_num = current_num.plus(1).plus(Blockchain.transaction.value);
+            this.repo.put("cur_number", current_num.toString());
+    
+        }
 
         // Lucky number system : address, start_num, end_num
         key = key.trim();
