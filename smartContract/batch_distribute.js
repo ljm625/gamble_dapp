@@ -20,9 +20,21 @@ BatchDistribute.prototype = {
         
         var number = address_list.length;
         var total_amount = new BigNumber(Blockchain.transaction.value);
-        var each_amount = total_amount.idiv(number);
-        for (var address in address_list){
-            Blockchain.transfer(address,each_amount);
+        var each_amount = total_amount.div(number);
+        console.log(each_amount);
+        console.log(address_list);
+        console.log(address_list.length);
+        for (var num=0;num<address_list.length;num++){
+            console.log(num);
+            console.log("Address to transfer:"+address_list[num]);
+            if(Blockchain.verifyAddress(address_list[num])){
+                var result = Blockchain.transfer(address_list[num],each_amount);
+                console.log("Transfer status for:"+address_list[num]+" : "+result);
+                if(result){
+                    total_amount = total_amount.minus(each_amount);
+                    console.log("Balance Remaining: "+total_amount.toString());
+                }
+            }
         }
 
     }
