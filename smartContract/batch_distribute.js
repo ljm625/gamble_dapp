@@ -31,6 +31,10 @@ BatchDistribute.prototype = {
     console.log(address_list);
     console.log(address_list.length);
     console.log("Address from: "+Blockchain.transaction.from);
+    // console.log("Testing code: ");
+    // var test_amount=new BigNumber(88);
+    // Blockchain.transfer("n1Y9JLyHUdHqFTvZD9S2a5acx6vsPeTHFCJ",test_amount)
+    // console.log("Test End");
     // In order to work, first, validate all address input, if invalid, throw exception and return money.
     var num =0;
 
@@ -40,7 +44,6 @@ BatchDistribute.prototype = {
            // The address is not valid
         console.log("Address not valid:"+address_list[num]);
         // var result = Blockchain.transfer(Blockchain.transaction.from,total_amount);
-        var result=true;
         // if(result){
         //   // No need to save it temporary
         //   console.log("Transfer back success");
@@ -60,8 +63,20 @@ BatchDistribute.prototype = {
         total_amount = total_amount.minus(each_amount);
         console.log("Balance Remaining: "+total_amount.toString());
       }
+      else {
+        throw new Error("Transaction failed. Rollback");
+
+      }
     }
 
-  }
+  },
+  // Now we need to forbid normal deposit to prevent funds lost
+    accept: function(){      
+        // This is the feature in 1.0.2. Not supported yet.
+
+        throw new Error("We Do not support deposit.");
+    }
+
+
 };
 module.exports = BatchDistribute;
