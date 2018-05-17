@@ -18,13 +18,14 @@ BatchDistribute.prototype = {
     // If, for some reason, some deposit failed (For example bad address), we should still allow the user to retain the balance from his account.
     // Need to check if throw function will rollback transfer action.
     // Check if it's a array
-    if(Array.isArray(address_list) == true){
+    if(!Array.isArray(address_list)){
       throw new Error("Invalid Input: Input need to be a array");
     }
     var total_amount = new BigNumber(Blockchain.transaction.value);
-    if(total_amount.isLessThanOrEqualTo(0) == true){
+    if(total_amount.lte(0)){
       throw new Error("Need to transfer NAS in order to do split distribute");
     }
+    var number = address_list.length;
     var each_amount = total_amount.div(number);
     console.log(each_amount);
     console.log(address_list);
@@ -40,15 +41,14 @@ BatchDistribute.prototype = {
         console.log("Address not valid:"+address_list[num]);
         // var result = Blockchain.transfer(Blockchain.transaction.from,total_amount);
         var result=true;
-        if(result){
-          // No need to save it temporary
-          console.log("Transfer back success");
-        }
-        else{
-          console.log("Transfer back failed");
-        }
+        // if(result){
+        //   // No need to save it temporary
+        //   console.log("Transfer back success");
+        // }
+        // else{
+        //   console.log("Transfer back failed");
+        // }
         throw new Error("Input address not valid! The money is already rolled back.");
-
       }
     }
 
