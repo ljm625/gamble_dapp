@@ -83,7 +83,7 @@ BatchDistribute.prototype = {
       throw new Error("Invalid Input: Input need to be a array");
     }
     
-    if(address_list.length!=amount_list){
+    if(address_list.length!==amount_list.length){
         throw new Error("Invalid Input: address list need to match price");
 
     }
