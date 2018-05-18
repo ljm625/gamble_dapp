@@ -22,6 +22,9 @@ SmartWallet.prototype = {
     init: function () {
         console.log("test");
         console.log(Blockchain.transaction.from);
+        this.owner=Blockchain.transaction.from;
+        this.period = 10000;
+        this._keepAlive();
         // console.log(this.balance);
 
     },
@@ -38,8 +41,16 @@ SmartWallet.prototype = {
         console.log("The new balance is : "+this.balance.toString());
     },
 
-    setInterval: function(){
+    setInterval: function(interval){
         // Set the interval to release fund.
+        if(typeof(interval)!=="number"){
+            throw new Error("Invalid Input. Numbers required.");
+        }
+        if(Blockchain.transaction.from == this.owner){
+            this._keepAlive();
+            this.period = interval;
+        }
+
     },
 
     _keepAlive: function(){
@@ -112,6 +123,13 @@ SmartWallet.prototype = {
     // Now we need to forbid normal deposit to prevent funds lost
     accept: function(){      
         // This is the feature in 1.0.2. Not supported yet.
+                // Deposit nas into the smart wallet.
+                this.balance.plus(Blockchain.transaction.value);
+                if(Blockchain.transaction.from == this.owner){
+                    this._keepAlive();
+                }
+                console.log("The new balance is : "+this.balance.toString());
+        
     }
 
 
