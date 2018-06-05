@@ -71,6 +71,17 @@ BatchDistribute.prototype = {
 
       }
     }
+    if(total_amount.gt(0)){
+      // Still some balance left, send back to sender.
+      var result = Blockchain.transfer(Blockchain.transaction.from,total_amount);
+      if(result){
+        console.log("Sent remaining back to sender: "+total_amount.toString());
+      }
+      else {
+        throw new Error("Transaction failed. Rollback");
+      }
+
+    }
 
   },
 
@@ -146,6 +157,19 @@ BatchDistribute.prototype = {
 
       }
     }
+
+    if(total_amount.gt(0)){
+      // Still some balance left, send back to sender.
+      var result = Blockchain.transfer(Blockchain.transaction.from,total_amount);
+      if(result){
+        console.log("Sent remaining back to sender: "+total_amount.toString());
+      }
+      else {
+        throw new Error("Transaction failed. Rollback");
+      }
+
+    }
+
 
   },
 
